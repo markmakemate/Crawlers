@@ -1,4 +1,7 @@
 import scrapy
+import mysql.connector
+import mysql.cursor
+import json
 import nltk #A NLP library, I plan to apply it to analyse articles#
 from scrapy.exporters import JsonItemExporter
 from scrapy.loader import ItemLoader
@@ -29,7 +32,7 @@ class Profile:
             yield scrapy.Request(url,callback=self.kol_profile_parser(Profile))
         return Profile
 
-    #Interface that the class "XiaoHongShu" will implement#
+    #Storage progress#
     def kol_profile_parser(self,response,itemloader):
         Profile=itemloader
         Profile.add_xpath('name','//span[@class="name-detail"]/text()')
@@ -49,7 +52,7 @@ class Article:
             yield scrapy.Request(url,callback=self.storage(itemloader))
         return itemloader.load_item()
 
-    #Storage progression#
+    #Storage progress#
     def storage(self,response,itemloader):
         for name in response.xpath('//span[@class="name-detail"]/text()').extract():
             itemloader.add_value('KOL_name',name)
@@ -67,16 +70,18 @@ class Article:
             itemloader.add_value('star_number',star)
         getContent(itemloader)
     
-    #join content list#
+    #join "content" list#
     def getContent(self,itemloader):
         text='\n'.join(itemloader['content'])
         itemloader.replace_value('content',text)
 
-#Users can apply the interfaces and configure parameters in this class to crawl the data they want#
+#Users can apply the interfaces and configure parameters to crawl the data they want#
 #Transaction the data that have been scraped to json file#
 class XiaoHongShu(scrapy.Spider,Article,Profile):
     name="XiaoHongShu"
     allowed_domain=['.xiaohongshu.com']
+
+    #Constructor,tab parameter is what u wanna crawl#
     def __init__(self,tab,catagory=None,*arg,*kwarg):
         super(XiaoHongShu,scrapy.Spider).__init__(*arg,*kwarg)
         self.start_url='%s%s%s'%('http://www.xiaohongshu.com/explore','?tab=',tab)
@@ -85,14 +90,19 @@ class XiaoHongShu(scrapy.Spider,Article,Profile):
     def parse_article(self,kol_url):
         yield super(XiaoHongShu,Article).parse_kol_article(kol_url)
     def export_items(self,info,path,file_name):
-        f=open('/'.join[path,file_name],'wb')
+        f=open('/'.join([path,file_name]),'wb')
         export=JsonItemExporter(f)
         export.start_exporting()
         export.export_item(info)
         return export
 
-#Modeling Modula#
+
+
+
+#Modeling data#
 class Modeling:
+
+
 
 
 
