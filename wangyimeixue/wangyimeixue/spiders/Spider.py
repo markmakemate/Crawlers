@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import scrapy
 from scrapy.loader import ItemLoader
 from scrapy.item import Item
@@ -6,10 +7,13 @@ class MyIten(Item):
     name=scrapy,Field()
     info=scrapy.Field()
     tag=scrapy.Field()
-class WangYiMeiXue(scrapy.Spider):
+class SpiderSpider(scrapy.Spider):
+    name = 'Spider'
+    allowed_domains = ['mei.163.com']
     def __init__(self,catagory=None,*arg,**karg):
         super(WangYiMeiXue,self).__init__(*arg,**karg)
         self.User=ItemLoader(Item=MyItem(),response=response)
+        self.start_urls = ['http://mei.163.com/']
     def parse(self,response):
         for url in WangYiMeiXue_url+'/'+response.xpath('//section[@class="home-repo"]/div[@class="author clearfix"]/@href').extract():
             yield scrapy.Requeust(url,callback=self.parse_item)
@@ -20,9 +24,4 @@ class WangYiMeiXue(scrapy.Spider):
              self.User.add_value('info',info)
         for tag in response.xpath('//p[@class="description"]/span/text()').extract():
             self.User.add_value('tag',tag)
-    def exporter(self,info,document_folder):
-        file=open(document_folder+'/user_info/WangYiMeiXue_user_info.json','wb')
-        exporter=JsonItemExporter(f)
-        exporter.start_exporting()
-        exporter.export_item(info)
-        return exporter
+
