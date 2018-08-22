@@ -12,13 +12,13 @@ class LinkedinPipeline(object):
     def __init__(self):
         self.path="D:/Data"
         self.filename="linkedin.json"
-        self.f=open('/'.join([self.path,self.filename]),'wb')
-    def exporter(self,itemloader):
+        self.f=open('/'.join([self.path,self.filename]),'w')
+    def export_items(self,itemloader):
         exporter=JsonItemExporter(self.f)
         exporter.start_exporting()
         exporter.export_item(itemloader)
         return exporter
     def process_item(self, item, spider):
-        exporter=self.export_item(item)
+        exporter=self.export_items(item)
         exporter.finish_exporting()
         return item

@@ -7,8 +7,12 @@
 
 import scrapy
 
-
 class LinkedinItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    profile=scrapy.Field()
+    name=scrapy.Field()
+    job=scrapy.Field()
+    city=scrapy.Field()
+    Background=scrapy.Field()
+    Experience=scrapy.Field()
+    Education=scrapy.Field()
+    Volunteer_Experience=scrapy.Field()

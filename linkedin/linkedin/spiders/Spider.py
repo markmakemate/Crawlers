@@ -12,7 +12,7 @@ class MyItem(Item):
     Education=scrapy.Field()
     Volunteer_Experience=scrapy.Field()
 
-class ItemProcessing:
+class ItemProcessor:
     #function process_profile aims to seperate profile item into name,job and city items#
     def process_profile(self,itemloader):
         profile='\n'.join(itemloader['profile'])
@@ -62,15 +62,14 @@ class ItemProcessing:
 class SpiderSpider(scrapy.Spider):
     name = 'Spider'
     allowed_domains = ['linkedin.com']
-    
-    def __init__(self,category=None,*arg,**karg):
-        super(SpiderSpider,self).__init__(*arg,**karg)
-        self.Linkedin_url='http://www.linkedin.com'
-        self.cookie=[{'name':'_gat','value':'1','domain':'.linkedin.com','path':'/'}]
-        self.start_url=''.join([self.Linkedin_url,'/company/','kfc-us'])
-        self.Craft=ItemLoader(Item=MyItem())
+    start_url='http://www.linkedin.com'
+    cookie=[{'name':'_gat','value':'1','domain':'.linkedin.com','path':'/'}]
+    Craft=ItemLoader(Item=MyItem())
+    home_page='/'.join([start_url,'company','kfc-us'])
+    def start_requests(self):
+        yield scrapy.FormRequest(self.home_page,cookies=self.cookie,callback=self.parse)
     def parse(self,response):
-        Inserch_url=reponse.xpath('//span[@class="org-company-employees-snackbar__highlight-container description-span"]//a/@href').extract()
+        Insearch_url=response.xpath('//span[@class="org-company-employees-snackbar__highlight-container description-span"]//a/@href').extract()
         for url in Insearch_url:
             scrapy.Request(url,cookies=self.cookie,callback=self.parse_item)
         return self.Craft.load_item()
