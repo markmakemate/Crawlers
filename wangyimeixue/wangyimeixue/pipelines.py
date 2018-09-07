@@ -5,10 +5,11 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
-
+import scrapy
+from scrapy.exporters import JsonItemExporter
 class WangyimeixuePipeline(object):
     def __init__(self):
-        self.path="D:\Data"
+        self.path="/home"
         self.filename="WangYiMeiXue.json"
         self.file=open('/'.join([self.path,self.filename]),'wb')
     def exporter(self,item):

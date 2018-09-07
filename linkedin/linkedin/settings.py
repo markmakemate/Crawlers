@@ -16,10 +16,10 @@ NEWSPIDER_MODULE = 'linkedin.spiders'
 ITEM_PIPELINES={
     "linkedin.pipelines.LinkedinPipeline":300,
 }
-DOWNLOADER_MIDDLEWARES = {
-    'linkedin.middlewares.LinkedinDownloaderMiddleware': None,
-}
-HTTPERROR_ALLOWED_CODES=[999]
+#DOWNLOADER_MIDDLEWARES = {
+#    'linkedin.middlewares.LinkedinDownloaderMiddleware': None,
+#}
+#HTTPERROR_ALLOWED_CODES=[999]
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'linkedin (+http://www.yourdomain.com)'
 
@@ -38,17 +38,11 @@ ROBOTSTXT_OBEY = False
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-#COOKIES_ENABLED = False
-COOKIES_ENABLED = True
+#COOKIES_ENABLED = Fals
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
-
+TELNETCONSOLE_ENABLED = True
 # Override the default request headers:
-DEFAULT_REQUEST_HEADERS = {
-   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-   'Accept-Language': 'en',
-   'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36'
-}
 
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
@@ -94,3 +88,7 @@ DEFAULT_REQUEST_HEADERS = {
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+TIMEOUT=25
+WINDOW_HEIGHT=720
+WINDOW_WIDTH=1280
+LOAD_IMAGE=True

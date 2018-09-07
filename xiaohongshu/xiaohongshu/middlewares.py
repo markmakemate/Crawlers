@@ -6,7 +6,15 @@
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
-
+from scrapy import http
+import selenium
+from selenium.webdriver.support import wait
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.firefox import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import wait
+import time
 
 class XiaohongshuSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
@@ -64,10 +72,18 @@ class XiaohongshuDownloaderMiddleware(object):
     @classmethod
     def from_crawler(cls, crawler):
         # This method is used by Scrapy to create your spiders.
-        s = cls()
+        timeout=crawler.Crawler.settings.get("TIMEOUT")
+        height=crawler.Crawler.settings.get("WINDOW_HEIGHT")
+        width=crawler.Crawler.settings.get("WINDOW_WIDTH")
+        LOAD_IMAGE=crawler.Crawler.settings.get('LOAD_IMAGE')
+        s = cls(timeout,height,width,LOAD_IMAGE)
         crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
         return s
-
+    def __init__(self,timeout,height,width,load_image):
+        self.timeout=timeout
+        self.height=height
+        self.width=width
+        self.load_image=load_image
     def process_request(self, request, spider):
         # Called for each request that goes through the downloader
         # middleware.
@@ -78,7 +94,22 @@ class XiaohongshuDownloaderMiddleware(object):
         # - or return a Request object
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
-        return None
+        selenium=request.meta.get('Selenium')
+        spider.browser.set_page_load_timeout(self.timeout)
+        spider.browser.set_window_size(self.width,self.height)
+        if selenium:
+            try:
+                spider.browser.get(request.url)
+                body=wait.WebDriverWait.until(
+                   self=wait.WebDriverWait,method=ec.presence_of_element_located((By.CLASS_NAME,"framework"))
+                )
+            except Exception as e:
+                print "Exception is %s"%e
+                return http.HtmlResponse(request.url,body=body)
+            else:
+                time.sleep(3)
+                return http.HtmlResponse(request.url,body=body)
+
 
     def process_response(self, request, response, spider):
         # Called with the response returned from the downloader.

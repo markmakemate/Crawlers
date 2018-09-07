@@ -10,7 +10,7 @@ from scrapy.item import Item
 from scrapy.exporters import JsonItemExporter
 class LinkedinPipeline(object):
     def __init__(self):
-        self.path="D:/Data"
+        self.path="/home/markmakemate/文档"
         self.filename="linkedin.json"
         self.f=open('/'.join([self.path,self.filename]),'w')
     def export_items(self,itemloader):
